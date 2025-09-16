@@ -51,7 +51,7 @@
       color: #000;
       }
 
-      h3 {
+    h3 {
       font-family: 'JogunGaebalSaebalV5', sans-serif;
       font-weight: 800;
       font-size: 30px;
@@ -79,16 +79,21 @@
 
     .item{position:absolute; width:100px; height:auto; user-select:none; cursor:inherit;} 
 
-
     .stage { cursor: url('spatula.png') 8 4, auto; }
-
 
     #egg{left:20px; top:50px}
     #shrimp{left:20px; top:150px}
     #rice{left:20px; top:250px}
     #soy{left:20px; top:350px}
 
-    #progress{position:absolute; left:10px; top:10px; width:240px; height:10px; border:0px solid #ccc; background:#eee}
+    #progress {
+      position: relative;
+      margin: 10px auto 0;
+      width: 240px;
+      height: 15px;
+      background: #eee;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    }
     #bar{height:100%; width:0%; background:#ffcc33}
 
     #finish{position:fixed; inset:0; background:rgba(0,0,0,.6); display:none; align-items:center; justify-content:center}
@@ -106,8 +111,8 @@
     <h2>다볶자 월드에 오신것을 환영합니다. <br>볶음밥을 볶으며 스트레스를 풀어보세요.(간장은 너무 많이 넣지마세요!)</h2>
 
     <div class="stage" id="stage">
- 
       <img id="mainGif" class="main" src="friedrice.gif"/>
+      <div id="progress"><div id="bar"></div></div>
 
 
       <img id="egg" class="item" src="egg.png" alt="계란" data-sound="eggSound">
@@ -124,9 +129,6 @@
 
 
     <audio id="bgm" src="bgm.mp3" preload="auto" loop autoplay playsinline></audio>
-
-
-<div id="progress"><div id="bar"></div></div>
 
 <div id="finish" class="hide">
   <div class="box">
@@ -200,7 +202,7 @@ document.getElementById('retry').onclick = function(){ location.reload(); };
   var soyHits = 0;
 document.getElementById('soy').addEventListener('click', function(){
   soyHits++;
-  setTimeout(function(){ soyHits = 0; }, 800); // 0.8초 안에 연타 카운트
+  setTimeout(function(){ soyHits = 0; }, 800);
   if(soyHits === 3){ alert('너무짜요!!! 🧂'); }
 });
 
@@ -214,6 +216,8 @@ document.addEventListener('mousemove', function(e){
 document.addEventListener('mouseleave', function(){
   ghost.style.display = 'none';
 });
+
+
 
 
 </script>
