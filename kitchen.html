@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fried Rice</title>
+  <style>
+
+    @font-face {
+    font-family: 'JogunGaebalSaebalV5';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/CHOGOONCHICKENSCRATCHV5.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+    *{box-sizing:border-box}
+
+    body {
+      background-size: cover;
+      color: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      cursor: url('spatula.png') 8 4, auto; 
+      background: url('fridge.jpg') center/cover no-repeat #f6f6f6;}
+    
+
+    h1 {
+      font-family: 'JogunGaebalSaebalV5', sans-serif;
+      font-weight: 400;
+      font-size: 50px;
+      text-align: center;
+      color: #ffffff;
+    }
+
+    h2 {
+      font-family: 'Pretendard', sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.3;
+      text-align: center;
+      color: #000;
+      }
+
+      h3 {
+      font-family: 'JogunGaebalSaebalV5', sans-serif;
+      font-weight: 800;
+      font-size: 30px;
+      text-align: center;
+      color: #000;
+      }
+
+    .wrap{width:min(980px,96vw); margin:16px auto}
+
+    .stage{
+      position:relative; height:620px;
+      background: rgba(255,255,255,.25);
+      backdrop-filter: blur(12px) saturate(120%);
+      -webkit-backdrop-filter: blur(12px) saturate(120%)
+      border: 1px solid rgba(255,255,255,.35);
+      border-radius: 24px;
+      box-shadow: 0 12px 30px rgba(0,0,0,.15);
+      overflow: hidden;
+    }
+
+    .stage { cursor: url('spatula.png') 8 4, auto; }
+
+
+    .main{position:absolute; left:50%; top:90px; transform:translateX(-50%); width:400px; aspect-ratio:16/9; border:0}
+
+    .item{position:absolute; width:100px; height:auto; user-select:none; cursor:inherit;} 
+
+
+    .stage { cursor: url('spatula.png') 8 4, auto; }
+
+
+    #egg{left:20px; top:50px}
+    #shrimp{left:20px; top:150px}
+    #rice{left:20px; top:250px}
+    #soy{left:20px; top:350px}
+
+    #progress{position:absolute; left:10px; top:10px; width:240px; height:10px; border:0px solid #ccc; background:#eee}
+    #bar{height:100%; width:0%; background:#ffcc33}
+
+    #finish{position:fixed; inset:0; background:rgba(0,0,0,.6); display:none; align-items:center; justify-content:center}
+
+    #finish .box{background:#fff; border:1px solid #ccc; padding:16px; text-align:center}
+
+    #finish.show{display:flex}
+
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <h1>🍳다볶자월드👨‍🍳</h1>
+    <h2>다볶자 월드에 오신것을 환영합니다. <br>볶음밥을 볶으며 스트레스를 풀어보세요.(간장은 너무 많이 넣지마세요!)</h2>
+
+    <div class="stage" id="stage">
+ 
+      <img id="mainGif" class="main" src="friedrice.gif"/>
+
+
+      <img id="egg" class="item" src="egg.png" alt="계란" data-sound="eggSound">
+      <img id="shrimp" class="item" src="shrimp.png" alt="새우" data-sound="shrimpSound">
+      <img id="rice" class="item" src="rice.png" alt="밥" data-sound="riceSound">
+      <img id="soy" class="item" src="soy.png" alt="간장" data-sound="soySound">
+    </div>
+
+
+    <audio id="eggSound" src="crack.mp3" preload="auto"></audio>
+    <audio id="shrimpSound" src="shrimp.mp3" preload="auto"></audio>
+    <audio id="riceSound" src="rice.mp3" preload="auto"></audio>
+    <audio id="soySound" src="pop.mp3" preload="auto"></audio>
+
+
+    <audio id="bgm" src="bgm.mp3" preload="auto" loop autoplay playsinline></audio>
+
+
+<div id="progress"><div id="bar"></div></div>
+
+<div id="finish" class="hide">
+  <div class="box">
+    <img src="finish.gif" width="200" height="200" />
+    <h3>🍳당신만의 볶음밥 완성🍚</h3>
+    <p>맛있게 드세요!</p>
+    <button id="retry">다시만들까?</button>
+  </div>
+</div>
+
+<audio id="finishSound" src="finish.mp3" preload="auto"></audio>
+
+<img id="spatulaGhost" src="spatula.png"
+     style="position:fixed; left:0; top:0; width:36px; pointer-events:none;
+            transform:translate(-30%,-30%); display:none; z-index:9999;">
+
+
+  </div>
+
+<script>
+
+  var items = document.querySelectorAll('.item');
+  items.forEach(function(el){
+    el.onclick = function(){
+      var id = el.getAttribute('data-sound');
+      var audio = document.getElementById(id);
+      if(audio){ audio.currentTime = 0; audio.play(); }
+onAnyClickProgress();
+
+    };
+  });
+
+
+  var bgm = document.getElementById('bgm');
+
+  bgm.volume = 0.2;
+  function tryPlay(){
+    var p = bgm.play();
+    if(p && typeof p.catch === 'function'){
+      p.catch(function(){
+
+        document.body.addEventListener('pointerdown', startBGM, { once: true });
+      });
+    }
+  }
+  function startBGM(){ bgm.play(); }
+  document.addEventListener('DOMContentLoaded', tryPlay);
+
+
+
+var GOAL = 12;
+var clicks = 0;
+
+function onAnyClickProgress(){
+  clicks++;
+  var w = Math.min(100, Math.round(clicks/GOAL*100));
+  document.getElementById('bar').style.width = w + '%';
+  if(clicks >= GOAL) finishDish();
+}
+
+
+function finishDish(){
+  try{ bgm && (bgm.volume = 0.05); }catch(e){}
+  var fin = document.getElementById('finishSound'); if(fin){ fin.currentTime=0; fin.play(); }
+  document.getElementById('finish').classList.add('show');
+}
+document.getElementById('retry').onclick = function(){ location.reload(); };
+
+
+
+  var soyHits = 0;
+document.getElementById('soy').addEventListener('click', function(){
+  soyHits++;
+  setTimeout(function(){ soyHits = 0; }, 800); // 0.8초 안에 연타 카운트
+  if(soyHits === 3){ alert('너무짜요!!! 🧂'); }
+});
+
+
+var ghost = document.getElementById('spatulaGhost');
+document.addEventListener('mousemove', function(e){
+  ghost.style.display = 'block';
+  ghost.style.left = e.clientX + 'px';
+  ghost.style.top  = e.clientY + 'px';
+});
+document.addEventListener('mouseleave', function(){
+  ghost.style.display = 'none';
+});
+
+
+</script>
+</body>
+</html>
